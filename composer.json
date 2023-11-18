@@ -1,0 +1,26 @@
+{
+  "name": "vendor_name/clickup-sdk",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Admin",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "feodorpranju/api-orm": "^1.0.0"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^6.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Feodorpranju\\ClickUp\\SDK\\": "src"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  }
+}
