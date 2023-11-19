@@ -27,7 +27,11 @@ trait HasParent
             )
                 ->call()
                 ->getResult()
-                ->get(Str::plural(static::ENTITY_NAME))
+                ->get(
+                    defined(static::class.'::FIND_RESULT_KEY')
+                        ? static::FIND_RESULT_KEY
+                        : Str::plural(static::ENTITY_NAME)
+                )
         )->map(
             fn($entity) => $entity->put([
                 $parentClass::ENTITY_NAME.'_id' => $parentId
@@ -77,7 +81,9 @@ trait HasParent
         }
 
         return $entities->filterByConditions(
-            $this->filterParentConditions($conditions)
+            $this->filterParentConditions(
+                $this->filterAfterSelectConditions($conditions)
+            )
         );
     }
 

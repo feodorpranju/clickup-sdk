@@ -18,9 +18,6 @@
   "autoload": {
     "psr-4": {
       "Feodorpranju\\ClickUp\\SDK\\": "src"
-    },
-    "files": [
-      "src/helpers.php"
-    ]
+    }
   }
 }

@@ -100,4 +100,9 @@ class Workspace extends AbstractModel
     {
         return $this->selectChildren(Task::class);
     }
+
+    public function timeEntries(): QueryBuilderInterface
+    {
+        return $this->selectChildren(TimeEntry::class);
+    }
 }

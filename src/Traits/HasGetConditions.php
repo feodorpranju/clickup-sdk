@@ -4,17 +4,20 @@
 namespace Feodorpranju\ClickUp\SDK\Traits;
 
 
+use Carbon\Carbon;
 use Feodorpranju\ClickUp\SDK\Models\Fields\FieldSettings;
-use Feodorpranju\ClickUp\SDK\Models\Task;
 use Illuminate\Support\Collection;
 use Feodorpranju\ApiOrm\Enumerations\FieldType;
 use Feodorpranju\ApiOrm\Enumerations\FieldGetMode;
+use function Symfony\Component\Translation\t;
 
 trait HasGetConditions
 {
     protected function generateSelectData(Collection $conditions): array
     {
         $data = [];
+
+        $conditions = $this->prepareConditions($conditions);
 
         foreach ($conditions as $idx => $condition) {
             if (in_array($condition[0], static::GET_FILTERS)) {
@@ -30,10 +33,6 @@ trait HasGetConditions
             $data,
             $this->generateDateSelectData($conditions)
         );
-
-        if (static::class === Task::class) {
-            dd($data);
-        }
 
         return $data;
     }
@@ -98,5 +97,47 @@ trait HasGetConditions
     {
         $fieldSettings = new FieldSettings('', FieldType::Datetime);
         return $fieldSettings->field($date)->get(FieldGetMode::Api);
+    }
+
+    /**
+     * @param Collection $conditions
+     * @return Collection
+     */
+    protected function prepareConditions(Collection $conditions): Collection
+    {
+        $conditions = $conditions->map(fn($cond) => [
+            $cond[0],
+            $cond[1],
+            is_object($cond[2]) && is_a($cond[2], Carbon::class)
+                ? $cond[2]->getTimestampMs()
+                : $cond[2]
+        ]);
+
+        if (defined(static::class.'::ARRAY_TO_STRING_FILTERS')) {
+            $conditions = $conditions->map(fn($cond) => [
+                $cond[0],
+                $cond[1],
+                is_array($cond[2]) && in_array($cond[0], static::ARRAY_TO_STRING_FILTERS)
+                    ? join(',', $cond[2])
+                    : $cond[2]
+            ]);
+        }
+
+        return $conditions;
+    }
+
+    /**
+     * Removes GET filters from conditions
+     *
+     * @param Collection $conditions
+     * @return Collection
+     */
+    protected function filterAfterSelectConditions(Collection $conditions): Collection
+    {
+        if (!defined(static::class.'::GET_FILTERS')) {
+            return $conditions;
+        }
+
+        return $conditions->filter(fn($cond) => !in_array($cond[0], static::GET_FILTERS));
     }
 }
