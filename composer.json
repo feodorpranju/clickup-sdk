@@ -1,12 +1,12 @@
 {
-  "name": "vendor_name/clickup-sdk",
-  "description": "description",
+  "name": "feodorpranju/clickup-sdk",
+  "description": "ORM package for ClickUp",
   "minimum-stability": "stable",
-  "license": "proprietary",
+  "license": "MIT",
   "authors": [
     {
-      "name": "Admin",
-      "email": "email@example.com"
+      "name": "Fiodor Pranju",
+      "email": "general@dif.md"
     }
   ],
   "require": {
