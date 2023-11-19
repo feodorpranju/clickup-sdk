@@ -41,6 +41,7 @@ class Task extends AbstractModel
         'date_done_lt',
         'custom_fields',
     ];
+
     protected const FILTERABLE_DATE_FIELDS = [
         'due_date',
         'date_created',
